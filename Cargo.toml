@@ -3,6 +3,9 @@ name = "mirage"
 version = "0.1.0"
 authors = ["anirudhRowjee <ani.rowjee@gmail.com>"]
 edition = "2018"
+description = "A tiny markdown compiler written in Rust."
+homepage = "https://anirudhrowjee.xyz"
+
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
