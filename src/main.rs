@@ -22,8 +22,16 @@ fn get_title() -> String
 
 
 /// Function to parse the markdown file - the actual compilation
-fn parse_markdown_file()
+/// How it should work in essence - 
+/// 1. Accept filepath as argument (TODO implement better error checking)
+/// 2. Open the file, parse contents into a buffer
+/// 3. Convert buffer to HTML and write resultant HTML to a new file
+/// If a filepath is not provided, show the usage
+///
+/// Arguments: provide filename
+fn parse_markdown_file(filename: &str)
 {
+    println!("[INFO] Beginning compilation of file {}", filename);
 }
 
 
@@ -60,7 +68,31 @@ fn usage()
     longbanner();
 }
 
+/// Usage
+/// `$ mirage ` - prints out the banner
+/// `$ mirage <filename.md>` - runs the compiler on the contents of `filename.md`
+/// `$ mirage opt1 opt2` - prints usage instructions as we accept only one argument
+///
+/// NOTE: As of now, the compiler does not support full commonmark standards. It will only
+/// parse h1 and p tags, more features to be implemented.
+///
 fn main()
 {
-    usage();
+    // parse command line arguments, use a vector of strings to do this
+    // internal note: we use `.collect()` to convert our iterator of args into a collection
+    let cl_args: Vec<String> = std::env::args().collect();
+
+    // check for number of arguments using match block
+    match cl_args.len() {
+        // since we have only the filename and the program name, we can use this
+        2 => parse_markdown_file(&cl_args[1]),
+        // the underscore represents the default case - if nothing else is matched, the 
+        // function attached to underscore will handle the expression
+        _ => {
+            // instead of single function calls, we can have blocks too
+            println!("ERROR! This is not the way.");
+            usage();
+        }
+    }
+
 }
