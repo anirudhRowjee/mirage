@@ -16,6 +16,7 @@ fn get_title() -> String
     title.push_str(&version);
     title.push_str("), ");
     title.push_str(&description);
+    // return the title
     title
 }
 
