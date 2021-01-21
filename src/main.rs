@@ -2,6 +2,9 @@
  * Mirage: A Tiny Markdown Compiler written in Rust
  * Author: Anirudh Rowjee
  */
+use std::path::Path;
+use std::fs::File;
+use std::io::{BufRead, BufReader};
 
 /// Function to get the title of the application
 fn get_title() -> String
@@ -32,6 +35,51 @@ fn get_title() -> String
 fn parse_markdown_file(filename: &str)
 {
     println!("[INFO] Beginning compilation of file {}", filename);
+
+    // declare filepath as a std::path::Path object
+    // it's literally a Path variable
+    let inputfile = Path::new(filename);
+
+    // attempt to open the file
+    // chain .expect() to handle exceptions for us
+    let file = File::open(inputfile)
+                .expect("{ ERROR } File opening failed!");
+
+    // state variables - we use this to track the parsing of the line. We use this to tell us
+    // what part of structure of the markdown/html conversion we are in, and what we should do when
+    // we encounter other closing tags, or, say, a newline character.
+    // TODO think of a better way to do this - use a stack?
+    //
+    // ptag : test if we are in paragraph
+    let mut ptag: bool = false;
+    // htag: check if we are in heading
+    let mut htag: bool = false;
+
+    // instantiate a vector to store the resultant HTML before we write it to a file.
+    // A token is essentially the smallest lexical unit of a file, and we use this vector to store
+    // the tokens we have in the file post-compile.
+    let mut tokens: Vec<String> = Vec::new();
+
+    // instantiate the buffered reader, which helps us read the file into memory.
+    // acts as a window into the file - heavy lifting done behind the scenes
+    let reader = BufReader::new(file);
+
+    // parse the file line by line
+    for line in reader.lines()
+    {
+        // since line is also a Result object, we have to be careful about how we handle it
+        // we use "unwrap" to do this - verbose method of checking for error, and not caring if
+        // it's a garbage value. Alternatively you can do
+        // ```
+        // let line_contents = match line {
+        //  Ok(contents) => contents,
+        //  Err(e) => panic!("compiler broke, sorry")
+        // }
+        // ```
+        let line_contents = line.unwrap();
+        println!("{}", &line_contents);
+    }
+
 }
 
 
